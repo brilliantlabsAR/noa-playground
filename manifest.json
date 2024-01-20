@@ -7,27 +7,27 @@
     "background_color": "#FFFFFF",
     "icons": [
         {
-            "src": "./img/brilliant-logo-152.png",
+            "src": "./img/brilliant-icon-152.png",
             "sizes": "152x152",
             "purpose": "any maskable"
         },
         {
-            "src": "./img/brilliant-logo-167.png",
+            "src": "./img/brilliant-icon-167.png",
             "sizes": "167x167",
             "purpose": "any maskable"
         },
         {
-            "src": "./img/brilliant-logo-180.png",
+            "src": "./img/brilliant-icon-180.png",
             "sizes": "180x180",
             "purpose": "any maskable"
         },
         {
-            "src": "./img/brilliant-logo-192.png",
+            "src": "./img/brilliant-icon-192.png",
             "sizes": "192x192",
             "purpose": "any maskable"
         },
         {
-            "src": "./img/brilliant-logo-512.png",
+            "src": "./img/brilliant-icon-512.png",
             "sizes": "512x512",
             "purpose": "any maskable"
         }
