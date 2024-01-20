@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;500;600&display=swap');
+
+:root {
+    --background-color: #EAE7DC;
+    --text-area-color: #e2ded2;
+    --button-color: #E85A4F;
+    --bold-text-color: #E85A4F;
+    --text-color: #8E8D8A;
+}
+
+* {
+    border: 0 solid transparent;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: 600px;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--background-color);
+}
+
+header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.logo {
+    height: 30px;
+    width: 30px;
+}
+
+h1 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+b {
+    color: var(--bold-text-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.keyEntryPanel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--background-color) 90%, transparent);
+}
+
+.keyEntryArea {
+    display: flex;
+    margin-top: 1rem;
+    justify-content: space-between;
+    width: 70%;
+}
+
+.keyEntryPanel input {
+    width: 100%;
+    margin-right: 1rem;
+    background-color: var(--text-area-color);
+    border-radius: 100px;
+    padding: 1rem;
+}
+
+.keyEntryPanel button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--background-color);
+}
+
+.keyEntryPanel button * {
+    color: var(--text-color);
+}
+
+.keyEntryPanel button:active * {
+    color: var(--button-color);
+}
+
+.keyEntryPanel button:active {
+    color: var(--highlight-color);
+}
+
+.personaBuilder {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    height: 10rem;
+}
+
+.personaQuestions {
+    display: flex;
+    flex-direction: column;
+}
+
+.personaQuestions label {
+    padding-bottom: 5px;
+}
+
+.personaQuestions div input {
+    margin-right: 10px;
+}
+
+.responseArea {
+    display: flex;
+    flex-grow: 1;
+    background-color: var(--text-area-color);
+    margin: 1rem;
+    padding: 1rem;
+    resize: none;
+}
+
+.inputArea {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
+.inputArea .textInput {
+    background-color: var(--text-area-color);
+    border-radius: 100px;
+    padding: 1rem;
+    width: 70%;
+}
+
+.inputArea input[type="file"] {
+    display: none;
+}
+
+.inputArea button,
+.inputArea label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--background-color);
+}
+
+.inputArea button *,
+.inputArea label * {
+    color: var(--text-color);
+}
+
+.inputArea button:active *,
+.inputArea label:active * {
+    color: var(--button-color);
+}

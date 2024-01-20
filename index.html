@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <script type="module" src="./js/main.js"></script>
+
+    <!-- PWA settings -->
+    <meta name="viewport" content="initial-scale=1.0 user-scalable=no">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="apple-mobile-web-app-title" content="Noa Playground">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white">
+    <link rel="icon" sizes="128x128" href="./img/logo.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./img/logo.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="./img/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/logo.png">
+
+    <!-- SEO title & description -->
+    <title>Noa Playground</title>
+    <meta name="description" content="Try out Noa without a Frame">
+    <link rel="canonical" href="https://playground.brilliant.xyz">
+
+    <!-- Facebook card meta -->
+    <meta property="og:title" content="Noa Playground">
+    <meta property="og:description" content="Try out Noa without a Frame">
+    <meta property="og:image" content="https://playground.brilliant.xyz/img/brilliant-share-1200.png">
+    <meta property="og:url" content="https://playground.brilliant.xyz">
+    <meta property="og:type" content="website">
+</head>
+
+<body>
+    <header>
+        <img class="logo" src="./img/logo.png" alt="Brilliant Logo">
+        <h1>Noa <b>Playground</b></h1>
+    </header>
+
+    <div class="personaBuilder">
+        <div class="personaQuestions">
+            <label><b>Create your Noa</b></label>
+            <label id="personaQuestion">What is your favorite color?</label>
+            <div><input type="radio" id="personaOption1"><label for="personaOption1">Green</label></div>
+            <div><input type="radio" id="personaOption2"><label for="personaOption2">Yellow</label></div>
+            <div><input type="radio" id="personaOption3"><label for="personaOption3">Blue</label></div>
+            <div><input type="radio" id="personaOption4"><label for="personaOption4">Red</label></div>
+            <div><input type="radio" id="personaOption4"><label for="personaOption4">Black</label></div>
+            <label id="personaDescription" hidden></label>
+        </div>
+        <img src="./img/unknown_noa.png" alt="Noa's placeholder">
+    </div>
+
+    <textarea class="responseArea" type="text" id="responseBox" readonly></textarea>
+
+    <div class="inputArea">
+        <input class="textInput" id="textInput" type="text" placeholder="Ask me anything..">
+        <input id="photoInput" type="file" accept="image/*" capture="environment" />
+        <label for="photoInput"><ion-icon name="camera-sharp" size="large"></ion-icon></label>
+        <button id="clearButton"><ion-icon name="refresh-circle-sharp" size="large"></ion-icon></button>
+        <button id="submitButton"><ion-icon name="arrow-up-sharp" size="large"></ion-icon></button>
+    </div>
+
+    <div class="keyEntryPanel" id="keyEntryPanel" style="display: none;">
+        <label><b>Enter your API key</b></label>
+        <div class="keyEntryArea">
+            <input type="text" id="keyEntryBox">
+            <button id="keyEntryButton"><ion-icon name="arrow-up-sharp" size="large"></ion-icon></button>
+        </div>
+    </div>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
