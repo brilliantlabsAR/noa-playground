@@ -1,17 +1,17 @@
-const photoInput = document.getElementById('photoInput')
-const textInput = document.getElementById('textInput')
-const submitButton = document.getElementById('submitButton')
-const clearButton = document.getElementById('clearButton')
-const responseBox = document.getElementById('responseBox')
 const keyEntryPanel = document.getElementById('keyEntryPanel')
 const keyEntryBox = document.getElementById('keyEntryBox')
 const keyEntryButton = document.getElementById('keyEntryButton')
+const responseBox = document.getElementById('responseBox')
+const textInput = document.getElementById('textInput')
+const photoInput = document.getElementById('photoInput')
+const clearButton = document.getElementById('clearButton')
+const submitButton = document.getElementById('submitButton')
 
-var apiToken = localStorage.getItem("apiToken")
-var imageFile = null;
+let apiToken = localStorage.getItem("apiToken")
+let imageFile = null;
 
 // Load config
-var config = {}
+let config = {}
 fetch('./noa_config.json')
     .then((response) => response.json())
     .then((json) => config = json);
@@ -26,7 +26,7 @@ const characterPrompt =
     `Always respond like Ali G`
 
 // Keep a running history of the conversion
-var history = [{
+let history = [{
     "role": "system",
     "content": config.basePrompt + " " + characterPrompt
 }]
@@ -39,29 +39,31 @@ keyEntryButton.addEventListener('click', () => {
 })
 
 // Stores and scales the captured or opened image
-window.openImage = function (file) {
+// window.openImage = function (file) {
+photoInput.addEventListener("change", (event) => {
 
-    var input = file.target;
-    var reader = new FileReader();
-    reader.onload = function (e) {
+    let reader = new FileReader()
+    reader.readAsDataURL(event.target.files[0])
 
-        // Open the file as an image
-        var image = document.createElement("img")
+    // Open the file as an image
+    reader.onload = function (event) {
+        let image = document.createElement("img")
+        image.src = event.target.result
         image.onload = function () {
 
             // Use canvas to resize and adjust the image
-            var canvas = document.createElement("canvas")
-            var ctx = canvas.getContext("2d")
-            ctx.drawImage(image, 0, 0, 200, 200)
+            let canvas = document.createElement("canvas")
+            canvas.width = 512
+            canvas.height = 512
+            const context = canvas.getContext("2d")
+            context.drawImage(image, 0, 0, 512, 512)
             // TODO properly crop and change color settings
 
             // Attach the image into the form data
-            formData.append("image", canvas.toDataURL())
+            imageFile = canvas.toDataURL("image/png", 50)
         }
-        image.src = e.target.result;
     }
-    reader.readAsDataURL(input.files[0]);
-}
+})
 
 // Button handler for sending prompts to the server
 submitButton.addEventListener('click', () => {
@@ -108,7 +110,7 @@ submitButton.addEventListener('click', () => {
             return response.json();
         })
         .then(data => {
-            responseBox.value += "Noa: " + data.response + "\n\n"
+            responseBox.value += `Noa: ${data.response} [${data.debug_tools} ${data.total_tokens} tokens used]\n\n`
             responseBox.scrollTop = responseBox.scrollHeight
 
             history.push({
