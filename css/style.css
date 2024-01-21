@@ -153,6 +153,7 @@ b {
 .inputArea label {
     display: inline-flex;
     align-items: center;
+    margin-left: 1rem;
     cursor: pointer;
     border-radius: 50%;
     background-color: var(--background-color);
