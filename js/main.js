@@ -1,106 +1,133 @@
+import { clearHistory, appendHistory, getHistory } from './history.js'
+import { resamplePhoto, getPhoto } from './photo.js'
+import { loadPersona, getNextPersonaQuestion, savePersona, deleteSavedPersona } from './persona.js'
+
 const keyEntryPanel = document.getElementById('keyEntryPanel')
 const keyEntryBox = document.getElementById('keyEntryBox')
 const keyEntryButton = document.getElementById('keyEntryButton')
+const personaQuestions = document.getElementById('personaQuestions')
+const personaResult = document.getElementById('personaResult')
+const personaImage = document.getElementById('personaImage')
+const personaResetButton = document.getElementById('personaResetButton')
+const questionLabel = document.getElementById('questionLabel')
+const questionOptions = document.getElementById('questionOptions')
+const personaText = document.getElementById('personaText')
 const responseBox = document.getElementById('responseBox')
 const textInput = document.getElementById('textInput')
 const photoInput = document.getElementById('photoInput')
 const clearButton = document.getElementById('clearButton')
 const submitButton = document.getElementById('submitButton')
 
-let apiToken = localStorage.getItem("apiToken")
-let imageFile = null;
+personaQuestions.style.display = 'none'
+personaResult.style.display = 'none'
 
-// Load config
 let config = {}
 fetch('./noa_config.json')
     .then((response) => response.json())
-    .then((json) => config = json);
+    .then((json) => {
+        config = json
+        setupPersona(config)
+    })
 
-// If an API token isn't set, open the token prompt
+let apiToken = localStorage.getItem("apiToken")
 if (apiToken == null) {
-    keyEntryPanel.style.display = 'flex'
+    keyEntryPanel.style.display = 'flex' // Show key entry panel
 }
 
-// TODO build this dynamically from the options
-const characterPrompt =
-    `Always respond like Ali G`
+function setupPersona(config) {
 
-// Keep a running history of the conversion
-let history = [{
-    "role": "system",
-    "content": config.basePrompt + " " + characterPrompt
-}]
+    let persona = loadPersona(config)
 
-// Button handler to update the API key and hide the prompt
-keyEntryButton.addEventListener('click', () => {
+    textInput.value = ""
+    responseBox.value = ""
+    responseBox.scrollTop = responseBox.scrollHeight
+
+    clearHistory(persona.personaPrompt)
+    personaImage.src = persona.personaImage
+
+    if (persona.personaComplete) {
+        personaQuestions.style.display = 'none'
+        personaResult.style.display = 'flex'
+        personaText.innerHTML = persona.personaPrompt
+        personaResetButton.hidden = false
+        textInput.disabled = false
+        textInput.placeholder = "Ask me something"
+        return
+    }
+    personaQuestions.style.display = 'flex'
+    personaResult.style.display = 'none'
+    personaResetButton.hidden = true
+    textInput.disabled = true
+    textInput.placeholder = "Create your Noa first"
+
+    let question = getNextPersonaQuestion(config.noa.questions)
+
+    questionLabel.innerHTML = question.question
+
+    for (let i = questionOptions.options.length - 1; i >= 0; i--) {
+        questionOptions.remove(i)
+    }
+
+    for (const i in question.options) {
+        let option = document.createElement('option')
+        option.value = question.options[i].option
+        option.innerHTML = question.options[i].option
+        questionOptions.appendChild(option)
+    }
+
+    questionOptions.value = -1
+}
+
+personaResetButton.onclick = function () {
+    deleteSavedPersona()
+    setupPersona(config)
+}
+
+questionOptions.onchange = function (event) {
+    savePersona(config.noa.questions, event.target.value)
+    setupPersona(config)
+}
+
+keyEntryButton.onclick = function () {
     apiToken = keyEntryBox.value
     localStorage.setItem("apiToken", keyEntryBox.value);
     keyEntryPanel.style.display = 'none'
-})
+}
 
-// Stores and scales the captured or opened image
-// window.openImage = function (file) {
-photoInput.addEventListener("change", (event) => {
+keyEntryBox.onkeydown = function (event) {
+    if (event.key == "Enter") {
+        keyEntryButton.click()
+    }
+}
 
+photoInput.onchange = function (event) {
     let reader = new FileReader()
     reader.readAsDataURL(event.target.files[0])
-
-    // Open the file as an image
     reader.onload = function (event) {
-        let image = document.createElement("img")
-        image.src = event.target.result
-        image.onload = function () {
-
-            // Use canvas to resize and adjust the image
-            let canvas = document.createElement("canvas")
-            canvas.width = 512
-            canvas.height = 512
-            const context = canvas.getContext("2d")
-            context.drawImage(image, 0, 0, 512, 512)
-            // TODO properly crop and change color settings
-
-            // Attach the image into the form data
-            imageFile = canvas.toDataURL("image/png", 50)
-        }
+        resamplePhoto(event.target.result)
     }
-})
+}
 
-// Button handler for sending prompts to the server
-submitButton.addEventListener('click', () => {
+submitButton.onclick = function () {
 
-    // Don't do anything if no text is given
     if (textInput.value == "") {
         return
     }
 
-    // Build the prompt payload
     const formData = new FormData()
     formData.append("prompt", textInput.value)
-    formData.append("messages", JSON.stringify(history))
+    formData.append("messages", JSON.stringify(getHistory()))
+    formData.append("image", getPhoto())
 
-    // Include an image if one is available
-    if (imageFile != null) {
-        formData.append("image", imageFile)
-    }
-    imageFile != null
-
-    // Update the response output box
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight
     textInput.value = ""
 
-    // Update history
-    history.push({
-        "role": "user",
-        "content": textInput.value
-    })
+    appendHistory("user", textInput.value)
 
-    // Post data to Noa API
-    fetch(config.apiUrl, {
+    fetch(config.api.url, {
         method: "POST",
-        headers: {
-            "Authorization": apiToken
-        },
+        headers: { "Authorization": apiToken },
         body: formData
     })
         .then(response => {
@@ -112,11 +139,7 @@ submitButton.addEventListener('click', () => {
         .then(data => {
             responseBox.value += `Noa: ${data.response} [${data.debug_tools} ${data.total_tokens} tokens used]\n\n`
             responseBox.scrollTop = responseBox.scrollHeight
-
-            history.push({
-                "role": "assistant",
-                "content": data.response
-            })
+            appendHistory("assistant", data.response)
         })
         .catch(error => {
             responseBox.value += "Error: " + error + "\n\n"
@@ -124,18 +147,15 @@ submitButton.addEventListener('click', () => {
             keyEntryPanel.style.display = 'flex'
             keyEntryBox.value = localStorage.getItem("apiToken")
         });
-})
+}
 
-// Button handler for the clear button
-clearButton.addEventListener('click', () => {
+textInput.onkeydown = function (event) {
+    console.log("Event")
+    if (event.key == "Enter") {
+        submitButton.click()
+    }
+}
 
-    // Clear the response output box
-    responseBox.value = ""
-    responseBox.scrollTop = responseBox.scrollHeight
-
-    // Reset history
-    history = [{
-        "role": "system",
-        "content": config.basePrompt + " " + characterPrompt
-    }]
-})
+clearButton.onclick = function () {
+    setupPersona(config)
+}

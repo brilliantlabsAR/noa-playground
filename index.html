@@ -38,24 +38,28 @@
         <h1>Noa <b>Playground</b></h1>
     </header>
 
-    <div class="personaBuilder">
-        <div class="personaQuestions">
-            <label><b>Create your Noa</b></label>
-            <label id="personaQuestion">What is your favorite color?</label>
-            <div><input type="radio" id="personaOption1"><label for="personaOption1">Green</label></div>
-            <div><input type="radio" id="personaOption2"><label for="personaOption2">Yellow</label></div>
-            <div><input type="radio" id="personaOption3"><label for="personaOption3">Blue</label></div>
-            <div><input type="radio" id="personaOption4"><label for="personaOption4">Red</label></div>
-            <div><input type="radio" id="personaOption4"><label for="personaOption4">Black</label></div>
-            <label id="personaDescription" hidden></label>
+    <div class="persona">
+        <div class="personaBuilder">
+            <div id="personaQuestions" class="personaQuestions">
+                <label><b>Create your Noa</b></label>
+                <label id="questionLabel"></label>
+                <select id="questionOptions"></select>
+            </div>
+            <div id="personaResult" class="personaResult">
+                <div>
+                    <label><b>Meet Noa</b></label>
+                    <button id="personaResetButton"><ion-icon name="refresh-circle-sharp">reset</ion-icon></button>
+                </div>
+                <textarea type="text" id="personaText" readonly></textarea>
+            </div>
         </div>
-        <img src="./img/unknown_noa.png" alt="Noa's placeholder">
+        <img id="personaImage" alt="Noa's placeholder">
     </div>
 
     <textarea class="responseArea" type="text" id="responseBox" readonly></textarea>
 
     <div class="inputArea">
-        <input class="textInput" id="textInput" type="text" placeholder="Ask me anything..">
+        <input class="textInput" id="textInput" type="text" disabled>
         <input id="photoInput" type="file" accept="image/*" capture="environment" />
         <label for="photoInput"><ion-icon name="camera-sharp" size="large">capture</ion-icon></label>
         <button id="clearButton"><ion-icon name="refresh-circle-sharp" size="large">clear</ion-icon></button>
