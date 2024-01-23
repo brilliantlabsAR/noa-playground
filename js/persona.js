@@ -93,6 +93,8 @@ async function startImageGeneration(
 
     let json = await response.json()
 
+    console.log(json)
+
     return json.inference
 }
 
@@ -117,6 +119,8 @@ async function waitForImages(config, inference, imagesReadyCallback, apiKey) {
         )
         let json = await response.json()
 
+        console.log(json)
+
         // When complete, save the images and call the callback handler
         if (json.inference.status == 'succeeded') {
 
@@ -129,6 +133,11 @@ async function waitForImages(config, inference, imagesReadyCallback, apiKey) {
             localStorage.setItem("personaImages", JSON.stringify(images))
             imagesReadyCallback(images)
             return
+        }
+
+        // If failed, throw an error
+        if (json.inference.status == 'failed') {
+            throw ("Image generation failed")
         }
     }
 }
