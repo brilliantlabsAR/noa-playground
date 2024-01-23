@@ -1,55 +1,134 @@
-export function loadPersona(config) {
+export function loadPersona(
+    promptReadyCallback,
+    imagesReadyCallback) {
 
-    let personaPrompt = config.noa.baseRolePrompt
-    let personaImage = "./img/unknown_noa.png"
-    let personaComplete = false
+    let prompt = localStorage.getItem("personaPrompt")
+    let images = JSON.parse(localStorage.getItem("personaImages"))
 
-    if (localStorage.getItem("personaPrompt") != null) {
-        personaPrompt += ` ${localStorage.getItem("personaPrompt")}`
-        // personaImage = localStorage.getItem("personaImage") // TODO
-        personaComplete = true
+    if (prompt && images) {
+        promptReadyCallback(prompt)
+        imagesReadyCallback(images)
+        return false
     }
 
-    return { personaPrompt, personaImage, personaComplete }
+    // If no saved persona found
+    return true
 }
 
-let questionNumber = -1
+export async function createPersona(
+    config,
+    questionCallback,
+    promptReadyCallback,
+    imagesReadyCallback,
+    scenarioApiKey) {
 
-export function getNextPersonaQuestion(questionList) {
+    let prompt = config.noa.basePrompt
+    let imagePrompt = config.noa.baseImagePrompt
 
-    questionNumber++
+    for (let questionNumber in config.noa.questions) {
 
-    if (questionList[questionNumber] != null) {
-        let question = questionList[questionNumber].question
-        let options = questionList[questionNumber].options
-        return { question, options }
-    }
+        let option = await questionCallback(config.noa.questions[questionNumber])
 
-    return null
-}
-
-let tempPersonaPrompt = ""
-let tempPersonaSpritePrompt = ""
-
-export function savePersona(questionList, chosenOption) {
-
-    for (const optionNumber in questionList[questionNumber].options) {
-        if (questionList[questionNumber].options[optionNumber].option ==
-            chosenOption) {
-            tempPersonaPrompt += ` ${questionList[questionNumber].options[optionNumber].roleAspect} `
-            tempPersonaSpritePrompt += ` ${questionList[questionNumber].options[optionNumber].spriteAspect} `
+        // Find the option in the questions list
+        for (const optionNumber in config.noa.questions[questionNumber].options) {
+            if (config.noa.questions[questionNumber].options[optionNumber].option ==
+                option) {
+                prompt += ` ${config.noa.questions[questionNumber].options[optionNumber].roleAspect} `
+                imagePrompt += ` ${config.noa.questions[questionNumber].options[optionNumber].spriteAspect} `
+            }
         }
     }
 
-    if (questionList.length - 1 == questionNumber) {
-        localStorage.setItem("personaPrompt", tempPersonaPrompt)
-    }
+    localStorage.setItem("personaPrompt", prompt)
+    promptReadyCallback(prompt)
 
-    // TODO generate and save image
+    // Start the image generation
+    let inference = await startImageGeneration(config, imagePrompt, scenarioApiKey)
+
+    // This will trigger the callback when it's done
+    waitForImages(config, inference, imagesReadyCallback, scenarioApiKey)
 }
 
-
-export function deleteSavedPersona() {
+export function resetPersona() {
     localStorage.removeItem("personaPrompt")
-    questionNumber = -1
+    localStorage.removeItem("personaImages")
+}
+
+async function startImageGeneration(
+    config,
+    prompt,
+    apiKey) {
+
+    const options = {
+        method: 'POST',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Basic ${apiKey}`
+        },
+        body: JSON.stringify({
+            parameters: {
+                qualityBoost: false,
+                type: 'txt2img',
+                disableMerging: false,
+                hideResults: false,
+                referenceAdain: false,
+                intermediateImages: false,
+                referenceAttn: false,
+                seed: config.scenario.seed,
+                negativePrompt: config.scenario.negativePrompt,
+                guidance: config.scenario.guidance,
+                prompt: prompt
+            }
+        })
+    };
+
+    let response = await fetch(
+        `${config.scenario.apiUrl}/${config.scenario.model}/inferences`, options
+    )
+
+    if (response.status != 200) {
+        throw (response.status)
+    }
+
+    let json = await response.json()
+
+    return json.inference
+}
+
+async function waitForImages(config, inference, imagesReadyCallback, apiKey) {
+
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Basic ${apiKey}`
+        }
+    };
+
+    while (true) {
+
+        // Every 3 seconds
+        await new Promise(r => setTimeout(r, 3000));
+
+        // Poll the API to see if the images are ready
+        let response = await fetch(
+            `${config.scenario.apiUrl}/${config.scenario.model}/inferences/${inference.id}`, options
+        )
+        let json = await response.json()
+
+        // When complete, save the images and call the callback handler
+        if (json.inference.status == 'succeeded') {
+
+            let images = []
+
+            for (let imageNumber in json.inference.images) {
+                images.push(json.inference.images[imageNumber].url)
+            }
+
+            localStorage.setItem("personaImages", JSON.stringify(images))
+            imagesReadyCallback(images)
+            return
+        }
+    }
 }

@@ -72,7 +72,7 @@ b {
     display: flex;
     margin-top: 1rem;
     justify-content: space-between;
-    width: 70%;
+    width: 90%;
 }
 
 .keyEntryPanel input {
@@ -178,7 +178,7 @@ b {
     background-color: var(--text-area-color);
     border-radius: 10px;
     padding: 1rem;
-    width: 70%;
+    width: 100%;
 }
 
 .inputArea input[type="file"] {

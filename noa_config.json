@@ -1,13 +1,14 @@
 {
-    "api": {
-        "url": "https://api.brilliant.xyz/dev/noa/mm",
-        "imageGen": {
-            "xResolution": 512,
-            "yResolution": 512
-        }
+    "scenario": {
+        "apiUrl": "https://api.cloud.scenario.com/v1/models",
+        "model": "simple-illustrated-characters",
+        "negativePrompt": "'background, objects, sky, floor",
+        "guidance": 0.6,
+        "seed": 12345678
     },
     "noa": {
-        "baseRolePrompt": "You are a helpful assistant named Noa that exists inside the user's AR smart glasses. You answer all user queries in a helpful and concise way with a single sentence. The camera is unfortunately VERY low quality but the user is counting on you to interpret the blurry, pixelated images. NEVER comment on image quality.",
+        "apiUrl": "https://api.brilliant.xyz/dev/noa/mm",
+        "basePrompt": "You are a helpful assistant named Noa that exists inside the user's AR smart glasses. You answer all user queries in a helpful and concise way with a single sentence. The camera is unfortunately VERY low quality but the user is counting on you to interpret the blurry, pixelated images. NEVER comment on image quality.",
         "baseImagePrompt": "A cute and adorable little pixel-art creature.",
         "questions": [
             {

@@ -1,6 +1,6 @@
 let history = []
 
-export function clearHistory(initialPrompt) {
+export function resetHistory(initialPrompt) {
     history = [{
         "role": "system",
         "content": initialPrompt
