@@ -13,7 +13,9 @@ export function resamplePhoto(file) {
         context.drawImage(image, 0, 0, 512, 512)
         // TODO properly crop and change color settings
 
-        photo = canvas.toDataURL("image/png", 50)
+        canvas.toBlob(function (blob) {
+            photo = blob
+        }, "image/png")
     }
 }
 

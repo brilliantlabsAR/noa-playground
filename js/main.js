@@ -150,7 +150,6 @@ submitButton.onclick = function () {
 }
 
 textInput.onkeydown = function (event) {
-    console.log("Event")
     if (event.key == "Enter") {
         submitButton.click()
     }
