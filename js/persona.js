@@ -42,11 +42,35 @@ export async function createPersona(
     localStorage.setItem("personaPrompt", prompt)
     promptReadyCallback(prompt)
 
-    // Start the image generation
-    let inference = await startImageGeneration(config, imagePrompt, scenarioApiKey)
+    // Generate a common random seed for all images
+    let seed = Math.floor(Math.random() * 1000000)
 
-    // This will trigger the callback when it's done
-    waitForImages(config, inference, imagesReadyCallback, scenarioApiKey)
+    // Start the image generation, one for each pose
+    let inference = []
+    for (let poseNum in config.scenario.pose) {
+        inference[poseNum] = await startImageGeneration(
+            config,
+            imagePrompt,
+            scenarioApiKey,
+            seed,
+            config.scenario.pose[poseNum])
+    }
+
+    // Wait for all assets to be generated
+    let assets = []
+    for (let poseNum in config.scenario.pose) {
+        assets.push(await waitForAsset(config, inference[poseNum], scenarioApiKey))
+    }
+
+    // Remove backgrounds
+    let images = []
+    for (let poseNum in config.scenario.pose) {
+        images.push(await removeBackground(config, assets[poseNum], scenarioApiKey))
+    }
+
+    // Save images and issue callback
+    localStorage.setItem("personaImages", JSON.stringify(images))
+    imagesReadyCallback(images)
 }
 
 export function resetPersona() {
@@ -57,7 +81,9 @@ export function resetPersona() {
 async function startImageGeneration(
     config,
     prompt,
-    apiKey) {
+    apiKey,
+    seed,
+    style) {
 
     const options = {
         method: 'POST',
@@ -68,23 +94,25 @@ async function startImageGeneration(
         },
         body: JSON.stringify({
             parameters: {
-                qualityBoost: false,
-                type: 'txt2img',
-                disableMerging: false,
-                hideResults: false,
-                referenceAdain: false,
-                intermediateImages: false,
-                referenceAttn: false,
-                seed: config.scenario.seed,
+                prompt: prompt + style,
                 negativePrompt: config.scenario.negativePrompt,
                 guidance: config.scenario.guidance,
-                prompt: prompt
+                height: config.scenario.height,
+                width: config.scenario.width,
+                seed: seed,
+                numInferenceSteps: config.scenario.numInferenceSteps,
+                numSamples: 1,
+                // disableMerging: false,
+                hideResults: false,
+                intermediateImages: false,
+                qualityBoost: false,
+                type: 'txt2img',
             }
         })
     };
 
     let response = await fetch(
-        `${config.scenario.apiUrl}/${config.scenario.model}/inferences`, options
+        `${config.scenario.apiUrl}/models/${config.scenario.model}/inferences`, options
     )
 
     if (response.status != 200) {
@@ -93,12 +121,10 @@ async function startImageGeneration(
 
     let json = await response.json()
 
-    console.log(json)
-
     return json.inference
 }
 
-async function waitForImages(config, inference, imagesReadyCallback, apiKey) {
+async function waitForAsset(config, inference, apiKey) {
 
     const options = {
         method: 'GET',
@@ -110,29 +136,18 @@ async function waitForImages(config, inference, imagesReadyCallback, apiKey) {
 
     while (true) {
 
-        // Every 3 seconds
-        await new Promise(r => setTimeout(r, 3000));
+        // Every 1 second
+        await new Promise(r => setTimeout(r, 1000));
 
         // Poll the API to see if the images are ready
         let response = await fetch(
-            `${config.scenario.apiUrl}/${config.scenario.model}/inferences/${inference.id}`, options
+            `${config.scenario.apiUrl}/models/${config.scenario.model}/inferences/${inference.id}`, options
         )
         let json = await response.json()
 
-        console.log(json)
-
         // When complete, save the images and call the callback handler
         if (json.inference.status == 'succeeded') {
-
-            let images = []
-
-            for (let imageNumber in json.inference.images) {
-                images.push(json.inference.images[imageNumber].url)
-            }
-
-            localStorage.setItem("personaImages", JSON.stringify(images))
-            imagesReadyCallback(images)
-            return
+            return json.inference.images[0].id
         }
 
         // If failed, throw an error
@@ -140,4 +155,28 @@ async function waitForImages(config, inference, imagesReadyCallback, apiKey) {
             throw ("Image generation failed")
         }
     }
+}
+
+async function removeBackground(config, asset, apiKey) {
+
+    const options = {
+        method: 'PUT',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Basic ${apiKey}`
+        },
+        body: JSON.stringify({
+            backgroundColor: 'transparent',
+            format: 'png',
+            returnImage: true,
+            assetId: asset
+        })
+    };
+
+    let response = await fetch(`${config.scenario.apiUrl}/images/erase-background`, options)
+
+    let json = await response.json()
+
+    return json.asset.url
 }

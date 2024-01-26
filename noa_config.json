@@ -1,10 +1,18 @@
 {
     "scenario": {
-        "apiUrl": "https://api.cloud.scenario.com/v1/models",
+        "apiUrl": "https://api.cloud.scenario.com/v1",
         "model": "simple-illustrated-characters",
         "negativePrompt": "'background, objects, sky, floor",
+        "pose": [
+            "smiling",
+            "laughing",
+            "thinking",
+            "relaxed face"
+        ],
+        "height": 1024,
+        "width": 1024,
         "guidance": 0.6,
-        "seed": 12345678
+        "numInferenceSteps": 30
     },
     "noa": {
         "apiUrl": "https://api.brilliant.xyz/dev/noa/mm",
