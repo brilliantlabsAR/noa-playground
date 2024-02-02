@@ -188,7 +188,8 @@ submitButton.onclick = async function () {
     formData.append("prompt", textInput.value)
     formData.append("messages", JSON.stringify(getHistory()))
     formData.append("image", getPhoto())
-
+    formData.append("experiment", "1")
+    
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight
     textInput.value = ""
