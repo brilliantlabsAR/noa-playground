@@ -55,9 +55,6 @@ window.onload = async function () {
             location.reload()
         }
     }
-
-    // Reset the history
-    resetHistory(prompt)
 }
 
 async function checkKeys(force) {
@@ -157,6 +154,9 @@ async function promptReadyUiCallback(prompt) {
     textInput.value = ""
     responseBox.value = ""
     responseBox.scrollTop = responseBox.scrollHeight
+
+    // Reset the history
+    resetHistory(prompt)
 }
 
 async function imageReadyUiCallback(images) {
@@ -195,6 +195,8 @@ submitButton.onclick = async function () {
     textInput.value = ""
 
     appendHistory("user", textInput.value)
+
+    console.log(getHistory())
 
     try {
         // Get the Brilliant API url

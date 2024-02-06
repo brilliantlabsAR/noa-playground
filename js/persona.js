@@ -102,7 +102,6 @@ async function startImageGeneration(
                 seed: seed,
                 numInferenceSteps: config.scenario.numInferenceSteps,
                 numSamples: 1,
-                // disableMerging: false,
                 hideResults: false,
                 intermediateImages: false,
                 qualityBoost: false,
