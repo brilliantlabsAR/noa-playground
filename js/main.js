@@ -17,6 +17,8 @@ const responseBox = document.getElementById('responseBox')
 const textInput = document.getElementById('textInput')
 const photoInput = document.getElementById('photoInput')
 const submitButton = document.getElementById('submitButton')
+const webSearchOptions = document.getElementById('web_search');
+const serpApiImageModeOptions = document.getElementById('serpapi_image_mode');
 
 // Keep persona section hidden (they are enabled at during setup)
 personaQuestions.style.display = 'none'
@@ -184,11 +186,17 @@ submitButton.onclick = async function () {
         return
     }
 
+    const assistantConfig = {
+        "search_api": webSearchOptions.value,
+        "engine": serpApiImageModeOptions.value,    // ignored for every other search_api
+    }
+
     const formData = new FormData()
     formData.append("prompt", textInput.value)
     formData.append("messages", JSON.stringify(getHistory()))
     formData.append("image", getPhoto())
     formData.append("experiment", "1")
+    formData.append("config", JSON.stringify(assistantConfig))
     
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight
