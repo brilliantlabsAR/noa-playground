@@ -63,6 +63,23 @@
         <button id="submitButton"><ion-icon name="arrow-up-sharp" size="large">send</ion-icon></button>
     </div>
 
+    <div class="inputArea">
+        <!-- Configuration options for AI assistant server -->
+        <label for="web_search">Web Search</label>
+        <select name="web_search" id="web_search">
+            <option value="serp">SerpApi</option>
+            <option value="dataforseo">DataForSEO</option>
+            <option value="perplexity">Perplexity</option>
+        </select>
+
+        <label for="serpapi_image_mode">SerpApi Image Mode</label>
+        <select name="serpapi_image_mode" id="serpapi_image_mode">
+            <option value="google_lens">Google Lens (ignores query)</option>
+            <option value="google_reverse_image">Google Reverse Image Search (w/ query)</option>
+        </select>
+        
+    </div>
+
     <div class="keyEntryPanel" id="keyEntryPanel" style="display: none;">
         <label><b>Enter your API key</b></label>
         <div class="keyEntryArea">
