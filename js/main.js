@@ -19,7 +19,7 @@ const photoInput = document.getElementById('photoInput')
 const submitButton = document.getElementById('submitButton')
 const webSearchOptions = document.getElementById('web_search');
 const serpApiImageModeOptions = document.getElementById('serpapi_image_mode');
-
+const clearButton = document.getElementById('clearButton')
 // Keep persona section hidden (they are enabled at during setup)
 personaQuestions.style.display = 'none'
 personaResult.style.display = 'none'
@@ -200,9 +200,9 @@ submitButton.onclick = async function () {
     
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight
-    textInput.value = ""
 
     appendHistory("user", textInput.value)
+    textInput.value = ""
 
     console.log(getHistory())
 
@@ -225,7 +225,6 @@ submitButton.onclick = async function () {
     } catch (error) {
         checkKeys(true)
     }
-
     responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
     responseBox.scrollTop = responseBox.scrollHeight
     appendHistory("assistant", json.response)
@@ -235,4 +234,10 @@ textInput.onkeydown = function (event) {
     if (event.key == "Enter") {
         submitButton.click()
     }
+}
+
+clearButton.onclick = function () {
+    responseBox.value = ""
+    responseBox.scrollTop = responseBox.scrollHeight
+    resetHistory(prompt)
 }
