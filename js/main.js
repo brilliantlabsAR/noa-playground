@@ -1,6 +1,7 @@
 import { loadPersona, createPersona, resetPersona } from './persona.js'
 import { resetHistory, appendHistory, getHistory } from './history.js'
 import { resamplePhoto, getPhoto } from './photo.js'
+import { localTime } from "./utils.js"
 
 const keyEntryPanel = document.getElementById('keyEntryPanel')
 const noaKeyEntryBox = document.getElementById('noaKeyEntryBox')
@@ -198,6 +199,8 @@ submitButton.onclick = async function () {
     formData.append("image", getPhoto())
     formData.append("experiment", "1")
     formData.append("config", JSON.stringify(assistantConfig))
+    formData.append("local_time", localTime())
+    formData.append("address", "2842 California Street, San Francisco, CA, 94115")
     
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight
