@@ -177,6 +177,7 @@ photoInput.onchange = function (event) {
     reader.readAsDataURL(event.target.files[0])
     reader.onload = function (event) {
         resamplePhoto(event.target.result)
+        photoInput.value = ""
     }
 }
 
