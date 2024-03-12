@@ -15,7 +15,10 @@ export function resamplePhoto(file) {
 
         canvas.toBlob(function (blob) {
             photo = blob
+            image.remove()
+            canvas.remove()
         }, "image/png")
+        
     }
 }
 
