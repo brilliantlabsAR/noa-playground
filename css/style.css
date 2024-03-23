@@ -244,6 +244,8 @@ textarea:focus, input:focus{
     padding-top: 2rem;
     display: flex ;
     flex-direction: column;
+    justify-items: center;
+    align-items: center;
 }
 .image label {
     color: var(--text-area-color);
@@ -261,4 +263,24 @@ textarea:focus, input:focus{
     margin-top: 1rem;
     height: 200px;
     width: 200px;
+}
+
+@media screen and (max-width: 700px) {
+
+    .persona {
+        display: none;
+    }
+    .main{
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .interaction{
+        padding: 1rem;
+        height: 70vh !important;
+    }
+    body{
+        height: unset;
+        overflow-y: auto;
+    }
 }
