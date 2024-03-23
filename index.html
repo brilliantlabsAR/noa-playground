@@ -37,6 +37,7 @@
     </header>
 
     <div class="persona">
+        
         <div class="personaBuilder">
             <div id="personaQuestions" class="personaQuestions">
                 <label><b>Create your Noa</b></label>
@@ -53,43 +54,56 @@
         </div>
         <img id="personaImage" src="./img/unhatched-noa.png" alt="Noa's placeholder">
     </div>
+    <div class="main">
+        
+        <div class="interaction">
+            <textarea class="responseArea" type="text" id="responseBox" readonly></textarea>
+            <div class="inputArea">
+                <input class="textInput" id="textInput" type="text" disabled>
+                <input id="photoInput" type="file" accept="image/*" capture="environment" />
+                <label for="photoInput"><ion-icon name="camera-sharp" size="large">capture</ion-icon></label>
+                <button id="submitButton"><ion-icon name="arrow-up-sharp" size="large">send</ion-icon></button>
+                <button id="clearButton"><ion-icon name="refresh-sharp" size="large">clear</ion-icon></button>
+            </div>
 
-    <textarea class="responseArea" type="text" id="responseBox" readonly></textarea>
+            <div class="options">
+                <!-- Configuration options for AI assistant server -->
+                <!-- <label for="web_search">Web Search</label> -->
+                <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115" placeholder="Address">
 
-    <div class="inputArea">
-        <input class="textInput" id="textInput" type="text" disabled>
-        <input id="photoInput" type="file" accept="image/*" capture="environment" />
-        <label for="photoInput"><ion-icon name="camera-sharp" size="large">capture</ion-icon></label>
-        <button id="submitButton"><ion-icon name="arrow-up-sharp" size="large">send</ion-icon></button>
-        <button id="clearButton"><ion-icon name="refresh-sharp" size="large">clear</ion-icon></button>
+                <div class="config">
+                <select name="web_search" id="web_search">
+                    <option value="serp">SerpApi</option>
+                    <option value="dataforseo">DataForSEO</option>
+                    <option value="perplexity">Perplexity</option>
+                </select>
+
+                <!-- <label for="serpapi_image_mode">SerpApi Image Mode</label> -->
+                <select name="serpapi_image_mode" id="serpapi_image_mode">
+                    <option value="google_lens">Google Lens (ignores query)</option>
+                    <option value="google_reverse_image" selected>Google Reverse Image Search (w/ query)</option>
+                </select>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="image">
+            <div class="imageArea">
+                <label for="input">Sent Image</label>
+                <canvas id="image_input" src="" alt="Noa's input"></canvas>
+            </div>
+            <div class="imageArea">
+                <label for="output">Recieved Image</label>
+                <canvas id="image_output" src="" alt="Noa's response"></canvas>
+            </div>
+        </div>
     </div>
-
-    <div class="inputArea">
-        <!-- Configuration options for AI assistant server -->
-        <label for="web_search">Web Search</label>
-        <select name="web_search" id="web_search">
-            <option value="serp">SerpApi</option>
-            <option value="dataforseo">DataForSEO</option>
-            <option value="perplexity">Perplexity</option>
-        </select>
-
-        <label for="serpapi_image_mode">SerpApi Image Mode</label>
-        <select name="serpapi_image_mode" id="serpapi_image_mode">
-            <option value="google_lens">Google Lens (ignores query)</option>
-            <option value="google_reverse_image">Google Reverse Image Search (w/ query)</option>
-        </select>
-    </div>
-
-    <div class="inputArea">
-        <label for="address">Address</label>
-        <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115">
-    </div>
-
     <div class="keyEntryPanel" id="keyEntryPanel" style="display: none;">
         <label><b>Enter your API key</b></label>
         <div class="keyEntryArea">
             <input type="text" id="noaKeyEntryBox" placeholder="Noa API key">
-            <input type="text" id="scenarioKeyEntryBox" placeholder="Scenario API key">
+            <!-- <input type="text" id="scenarioKeyEntryBox" placeholder="Scenario API key"> -->
             <button id="keyEntryButton"><ion-icon name="arrow-up-sharp" size="large">set</ion-icon></button>
         </div>
     </div>
