@@ -1,6 +1,7 @@
 import { loadPersona, createPersona, resetPersona } from './persona.js'
 import { resetHistory, appendHistory, getHistory, resetImages } from './history.js'
 import { resamplePhoto, getPhoto } from './photo.js'
+import { localTime } from "./utils.js"
 
 const keyEntryPanel = document.getElementById('keyEntryPanel')
 const noaKeyEntryBox = document.getElementById('noaKeyEntryBox')
@@ -19,6 +20,7 @@ const photoInput = document.getElementById('photoInput')
 const submitButton = document.getElementById('submitButton')
 const webSearchOptions = document.getElementById('web_search');
 const serpApiImageModeOptions = document.getElementById('serpapi_image_mode');
+const addressText = document.getElementById("address");
 const clearButton = document.getElementById('clearButton')
 // Keep persona section hidden (they are enabled at during setup)
 personaQuestions.style.display = 'none'
@@ -205,6 +207,8 @@ submitButton.onclick = async function () {
     }
     formData.append("experiment", "1")
     formData.append("config", JSON.stringify(assistantConfig))
+    formData.append("local_time", localTime())
+    formData.append("address", addressText.value)
     
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight

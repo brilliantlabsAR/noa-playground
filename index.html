@@ -66,9 +66,12 @@
                 <button id="clearButton"><ion-icon name="refresh-sharp" size="large">clear</ion-icon></button>
             </div>
 
-            <div class="config">
+            <div class="options">
                 <!-- Configuration options for AI assistant server -->
                 <!-- <label for="web_search">Web Search</label> -->
+                <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115" placeholder="Address">
+
+                <div class="config">
                 <select name="web_search" id="web_search">
                     <option value="serp">SerpApi</option>
                     <option value="dataforseo">DataForSEO</option>
@@ -78,9 +81,10 @@
                 <!-- <label for="serpapi_image_mode">SerpApi Image Mode</label> -->
                 <select name="serpapi_image_mode" id="serpapi_image_mode">
                     <option value="google_lens">Google Lens (ignores query)</option>
-                    <option value="google_reverse_image">Google Reverse Image Search (w/ query)</option>
+                    <option value="google_reverse_image" selected>Google Reverse Image Search (w/ query)</option>
                 </select>
-                
+                </div>
+
             </div>
         </div>
         

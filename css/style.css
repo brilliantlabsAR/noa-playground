@@ -264,7 +264,19 @@ textarea:focus, input:focus{
     height: 200px;
     width: 200px;
 }
-
+.options{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.options input{
+    border: none;
+    background-color: var(--text-area-color);
+    border-radius: 10px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    margin: 1rem;
+}
 @media screen and (max-width: 700px) {
 
     .persona {
