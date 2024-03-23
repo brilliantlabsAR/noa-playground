@@ -11,14 +11,16 @@ export function resamplePhoto(file) {
         // canvas.height = 512
         // const context = canvas.getContext("2d")
         // context.drawImage(image, 0, 0, 512, 512)
-        // instead of resizing, crop the image from center
+        // instead of resizing, crop the image from center with 512 size
         let width = image.width
         let height = image.height
         let size = Math.min(width, height)
-        canvas.width = size
-        canvas.height = size
+        let x = (width - size) / 2
+        let y = (height - size) / 2
+        canvas.width = 512
+        canvas.height = 512
         const context = canvas.getContext("2d")
-        context.drawImage(image, (width - size) / 2, (height - size) / 2, size, size, 0, 0, size, size)
+        context.drawImage(image, x, y, size, size, 0, 0, 512, 512)
         
         // TODO properly crop and change color settings
 
