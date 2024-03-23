@@ -1,5 +1,5 @@
 import { loadPersona, createPersona, resetPersona } from './persona.js'
-import { resetHistory, appendHistory, getHistory } from './history.js'
+import { resetHistory, appendHistory, getHistory, resetImages } from './history.js'
 import { resamplePhoto, getPhoto } from './photo.js'
 
 const keyEntryPanel = document.getElementById('keyEntryPanel')
@@ -32,7 +32,8 @@ window.onload = async function () {
 
     // Check if the keys have been entered
     await checkKeys(false)
-
+    promptReadyUiCallback(prompt)
+    return
     // Load the saved Noa if it exists
     let notFound = loadPersona(
         promptReadyUiCallback,
@@ -63,10 +64,11 @@ async function checkKeys(force) {
 
     // Load the tokens if they exist
     let brilliantApiToken = localStorage.getItem("brilliantApiToken")
-    let scenarioApiToken = localStorage.getItem("scenarioApiToken")
+    // let scenarioApiToken = localStorage.getItem("scenarioApiToken")
 
     // Nothing to do if the keys have been entered and not forcing new key entry
-    if (brilliantApiToken && scenarioApiToken && force == false) {
+    // if (brilliantApiToken && scenarioApiToken && force == false) {
+    if (brilliantApiToken  && force == false) {
         return
     }
 
@@ -75,7 +77,7 @@ async function checkKeys(force) {
 
     // Populate the boxes with the current keys if they exist
     noaKeyEntryBox.value = brilliantApiToken
-    scenarioKeyEntryBox.value = scenarioApiToken
+    // scenarioKeyEntryBox.value = scenarioApiToken
 
     // Wait for the user to submit the form
     await new Promise((resolve) => {
@@ -95,7 +97,7 @@ async function checkKeys(force) {
 
     // Save the keys
     localStorage.setItem("brilliantApiToken", noaKeyEntryBox.value);
-    localStorage.setItem("scenarioApiToken", scenarioKeyEntryBox.value);
+    // localStorage.setItem("scenarioApiToken", scenarioKeyEntryBox.value);
 
     // Hide the panel
     keyEntryPanel.style.display = 'none'
@@ -195,7 +197,12 @@ submitButton.onclick = async function () {
     const formData = new FormData()
     formData.append("prompt", textInput.value)
     formData.append("messages", JSON.stringify(getHistory()))
-    formData.append("image", getPhoto())
+    let photo_sent = getPhoto()
+    if (photo_sent) {
+        formData.append("image", photo_sent)
+    }else{
+        resetImages("image_input")
+    }
     formData.append("experiment", "1")
     formData.append("config", JSON.stringify(assistantConfig))
     
@@ -227,10 +234,24 @@ submitButton.onclick = async function () {
         checkKeys(true)
     }
     responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
+    let imageOutput = json.image
+     // image is base64 encoded
+    if (imageOutput) {
+        imageOutput = "data:image/png;base64," + imageOutput
+        drawOutputImage(imageOutput)
+    }
     responseBox.scrollTop = responseBox.scrollHeight
     appendHistory("assistant", json.response)
 }
-
+function drawOutputImage(image) {
+    const canvas = document.getElementById("image_output")
+    const ctx = canvas.getContext("2d")
+    const img = new Image()
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, 512, 512)
+    }
+    img.src = image
+}
 textInput.onkeydown = function (event) {
     if (event.key == "Enter") {
         submitButton.click()

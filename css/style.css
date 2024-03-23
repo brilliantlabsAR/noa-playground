@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;500;600&display=swap');
 
 :root {
-    --background-color: #EAE7DC;
-    --text-area-color: #e2ded2;
+    --background-color: #32312d;
+    --text-area-color: #e7e5e0;
     --button-color: #E85A4F;
     --bold-text-color: #E85A4F;
-    --text-color: #8E8D8A;
+    --text-color: #413f3c;
 }
 
 * {
@@ -25,7 +25,7 @@ body {
     display: flex;
     flex-direction: column;
     margin: auto;
-    max-width: 600px;
+    max-width: 800px;
     height: 100%;
     overflow: hidden;
     background-color: var(--background-color);
@@ -47,6 +47,7 @@ h1 {
     font-size: 1.2rem;
     font-weight: 400;
     text-transform: uppercase;
+    color: var(--text-area-color);
 }
 
 b {
@@ -155,7 +156,19 @@ b {
 .personaResult button:active * {
     color: var(--button-color);
 }
+.main{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    padding: 1rem;
+}
+.interaction{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
 
+}
 .responseArea {
     display: flex;
     flex-grow: 1;
@@ -164,9 +177,12 @@ b {
     padding: 1rem;
     border-radius: 10px;
     resize: none;
+    border: none;
 }
-
-.inputArea {
+textarea:focus, input:focus{
+    outline: none;
+}
+.inputArea,.config {
     display: flex;
     justify-content: space-between;
     margin: 1rem;
@@ -180,13 +196,16 @@ b {
     padding: 1rem;
     width: 100%;
 }
+.inputArea .textInput:active {
+    border: none;
+}
 
 .inputArea input[type="file"] {
     display: none;
 }
 
 .inputArea button,
-.inputArea label {
+.inputArea label{
     display: inline-flex;
     align-items: center;
     margin-left: 1rem;
@@ -196,10 +215,50 @@ b {
 
 .inputArea button,
 .inputArea label {
+    color: var(--text-area-color) !important;
+}
+.icon-large{
+    color: var(--text-area-color) !important;
+}
+.config select {
+    background-color: var(--text-area-color);
+    border-radius: 10px;
+    padding: 0.8rem;
+    width: 100%;
     color: var(--text-color);
 }
-
+.config label {
+    color: var(--text-area-color);
+}
+.config select:first-child {
+    margin-right: 1rem;
+}
 .inputArea button:active *,
 .inputArea label:active * {
     color: var(--button-color);
+}
+.persona{
+    display: none;
+}
+.image{
+    padding-top: 2rem;
+    display: flex ;
+    flex-direction: column;
+}
+.image label {
+    color: var(--text-area-color);
+}
+.image .imageArea{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 0;
+    margin: 1rem;
+    margin-bottom: 3rem;
+}
+
+.image canvas {
+    margin-top: 1rem;
+    height: 200px;
+    width: 200px;
 }
