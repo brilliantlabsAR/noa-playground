@@ -85,7 +85,7 @@ async function checkKeys(force) {
         // TODO don't resolve until both boxes are set
         keyEntryButton.addEventListener('click', resolve)
         noaKeyEntryBox.addEventListener('keydown', enterPressed)
-        scenarioKeyEntryBox.addEventListener('keydown', enterPressed)
+        // scenarioKeyEntryBox.addEventListener('keydown', enterPressed)
 
         // Allow 'Enter' from either of the boxes too
         function enterPressed(event) {
