@@ -36,6 +36,6 @@ export function resamplePhoto(file) {
 // Return a photo if available, otherwise return null. Photo is nulled on return
 export function getPhoto() {
     let returnPhoto = photo
-    photo = null
+    // photo = null
     return returnPhoto
 }

@@ -230,8 +230,11 @@ textarea:focus, input:focus{
 .config label {
     color: var(--text-area-color);
 }
-.config select:first-child {
+.config select {
     margin-right: 1rem;
+}
+.config select:last-child{
+    margin-right: 0;
 }
 .inputArea button:active *,
 .inputArea label:active * {
@@ -276,6 +279,16 @@ textarea:focus, input:focus{
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     margin: 1rem;
+}
+.config label{
+    /* vertical text align */
+    display: flex;
+    align-items: center;
+}
+input[type="checkbox"]{
+    height: 1.5rem;
+    width: 1.5rem;
+
 }
 @media screen and (max-width: 700px) {
 
