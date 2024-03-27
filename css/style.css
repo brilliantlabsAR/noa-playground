@@ -160,7 +160,7 @@ b {
     display: flex;
     flex-direction: row;
     height: 100%;
-    padding: 1rem;
+    overflow-y: scroll;
 }
 .interaction{
     display: flex;
@@ -178,6 +178,7 @@ b {
     border-radius: 10px;
     resize: none;
     border: none;
+    min-height: 150px;
 }
 textarea:focus, input:focus{
     outline: none;
@@ -187,7 +188,6 @@ textarea:focus, input:focus{
     justify-content: space-between;
     margin: 1rem;
     margin-top: 0;
-    margin-bottom: 3rem;
 }
 
 .inputArea .textInput {
@@ -272,23 +272,48 @@ textarea:focus, input:focus{
     justify-content: space-between;
     flex-direction: column;
 }
-.options input{
+/* .options input{
     border: none;
     background-color: var(--text-area-color);
     border-radius: 10px;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     margin: 1rem;
-}
+} */
 .config label{
     /* vertical text align */
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+.config input{
+    background-color: var(--text-area-color);
+    border-radius: 10px;
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    /* margin: 1rem; */
+    border: none;
+
 }
 input[type="checkbox"]{
     height: 1.5rem;
     width: 1.5rem;
+    margin: 1rem;
+}
 
+.options textarea {
+    display: flex;
+    flex-grow: 1;
+    background-color: var(--text-area-color);
+    /* margin: 1rem; */
+    padding: 1rem;
+    border-radius: 10px;
+    resize: none;
+    border: none;
+    min-height: 150px;
+}
+.collapsed{
+    display: none !important;
 }
 @media screen and (max-width: 700px) {
 
@@ -298,7 +323,7 @@ input[type="checkbox"]{
     .main{
         display: flex;
         flex-direction: column;
-        padding: 1rem;
+        /* padding: 1rem; */
     }
     .interaction{
         padding: 1rem;

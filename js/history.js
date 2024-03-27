@@ -1,12 +1,16 @@
 let history = []
 
-export function resetHistory(initialPrompt) {
+export function resetHistory() {
     resetImages("image_input")
     resetImages("image_output")
-    history = [{
-        "role": "system",
-        "content": initialPrompt
-    }]
+    history = []
+}
+export function setSystemMessage(systemMessage) {
+    if (history.length == 0 || history[0]["role"] != "system") {
+        // Need to insert a system message at the beginning
+        history.unshift({ "role": "system", "content": "" })
+    }
+    history[0]["content"] = systemMessage
 }
 export function resetImages(id) {
     const canvas = document.getElementById(id);
