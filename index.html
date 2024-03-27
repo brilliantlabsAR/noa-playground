@@ -67,17 +67,26 @@
             </div>
 
             <div class="options">
-                <!-- Configuration options for AI assistant server -->
-                <!-- <label for="web_search">Web Search</label> -->
-                <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115" placeholder="Address">
-
                 <div class="config">
-                <select name="web_search" id="web_search">
-                    <option value="serp">SerpApi</option>
-                    <option value="dataforseo">DataForSEO</option>
-                    <option value="perplexity">Perplexity</option>
-                </select>
-
+                    <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115" placeholder="Address">
+                <label for="generate_image">Generate Image
+                    <input type="checkbox" name="generate_image" id="generateImage">
+                </label>
+                    
+                </div>
+                <div class="config">
+                
+                    <select name="web_search" id="web_search" style="display: none;">
+                        <option value="serp">SerpApi</option>
+                        <option value="dataforseo">DataForSEO</option>
+                        <option value="perplexity">Perplexity</option>
+                    </select>
+                    <select name="Vision" id="visionModel">
+                        <option value="gpt-4-vision-preview">GPT4Vision</option>
+                        <option value="claude-3-haiku-20240307">Claude-3 Haiku</option>
+                        <option value="claude-3-sonnet-20240229">Claude-3 Sonnet</option>
+                        <option value="claude-3-sonnet-20240229">Claude-3 Opus</option>
+                    </select>
                 <!-- <label for="serpapi_image_mode">SerpApi Image Mode</label> -->
                 <select name="serpapi_image_mode" id="serpapi_image_mode">
                     <option value="google_lens">Google Lens (ignores query)</option>

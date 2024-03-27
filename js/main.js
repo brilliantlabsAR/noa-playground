@@ -22,6 +22,8 @@ const webSearchOptions = document.getElementById('web_search');
 const serpApiImageModeOptions = document.getElementById('serpapi_image_mode');
 const addressText = document.getElementById("address");
 const clearButton = document.getElementById('clearButton')
+const visionModel = document.getElementById('visionModel')
+const generateImage = document.getElementById('generateImage')
 // Keep persona section hidden (they are enabled at during setup)
 personaQuestions.style.display = 'none'
 personaResult.style.display = 'none'
@@ -190,12 +192,18 @@ submitButton.onclick = async function () {
     if (textInput.value == "") {
         return
     }
-
+    let vision_model = visionModel.value
+    let generate_image = generateImage.checked
     const assistantConfig = {
         "search_api": webSearchOptions.value,
         "engine": serpApiImageModeOptions.value,    // ignored for every other search_api
     }
-
+    if (vision_model) {
+        assistantConfig["vision"] = vision_model
+    }
+    if (generate_image) {
+        assistantConfig["generate_image"] = 1
+    }
     const formData = new FormData()
     formData.append("prompt", textInput.value)
     formData.append("messages", JSON.stringify(getHistory()))
