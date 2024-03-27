@@ -1,5 +1,5 @@
 import { loadPersona, createPersona, resetPersona } from './persona.js'
-import { resetHistory, appendHistory, getHistory, resetImages } from './history.js'
+import { resetHistory, setSystemMessage, appendHistory, getHistory, resetImages } from './history.js'
 import { resamplePhoto, getPhoto } from './photo.js'
 import { localTime } from "./utils.js"
 
@@ -22,6 +22,8 @@ const webSearchOptions = document.getElementById('web_search');
 const serpApiImageModeOptions = document.getElementById('serpapi_image_mode');
 const addressText = document.getElementById("address");
 const clearButton = document.getElementById('clearButton')
+const systemMessageText = document.getElementById('systemMessage')
+const useCustomSystemMessage = document.getElementById("useCustomSystemMessage")
 // Keep persona section hidden (they are enabled at during setup)
 personaQuestions.style.display = 'none'
 personaResult.style.display = 'none'
@@ -34,32 +36,7 @@ window.onload = async function () {
 
     // Check if the keys have been entered
     await checkKeys(false)
-    promptReadyUiCallback(prompt)
-    return
-    // Load the saved Noa if it exists
-    let notFound = loadPersona(
-        promptReadyUiCallback,
-        imageReadyUiCallback
-    )
-
-    // Otherwise create a new Noa
-    if (notFound) {
-        try {
-
-            await createPersona(
-                configJson,
-                questionUiCallback,
-                promptReadyUiCallback,
-                imageReadyUiCallback,
-                localStorage.getItem("scenarioApiToken"))
-
-        } catch (error) {
-
-            // If we get an API key error, need to update keys and reload
-            await checkKeys(true)
-            location.reload()
-        }
-    }
+    promptReadyUiCallback()
 }
 
 async function checkKeys(force) {
@@ -144,14 +121,14 @@ async function questionUiCallback(question) {
     return option
 }
 
-async function promptReadyUiCallback(prompt) {
+async function promptReadyUiCallback() {
 
     // Hide the question UI
     personaQuestions.style.display = 'none'
 
     // Show Noa's personality
     personaResult.style.display = 'flex'
-    personaText.innerHTML = prompt
+    personaText.innerHTML = ""
     personaResetButton.hidden = false
 
     // Enable and clear the text areas
@@ -162,7 +139,7 @@ async function promptReadyUiCallback(prompt) {
     responseBox.scrollTop = responseBox.scrollHeight
 
     // Reset the history
-    resetHistory(prompt)
+    resetHistory()
 }
 
 async function imageReadyUiCallback(images) {
@@ -194,6 +171,10 @@ submitButton.onclick = async function () {
     const assistantConfig = {
         "search_api": webSearchOptions.value,
         "engine": serpApiImageModeOptions.value,    // ignored for every other search_api
+    }
+
+    if (useCustomSystemMessage.checked) {
+        setSystemMessage(systemMessageText.value)
     }
 
     const formData = new FormData()
@@ -265,5 +246,5 @@ textInput.onkeydown = function (event) {
 clearButton.onclick = function () {
     responseBox.value = ""
     responseBox.scrollTop = responseBox.scrollHeight
-    resetHistory(prompt)
+    resetHistory()
 }

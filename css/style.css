@@ -277,6 +277,18 @@ textarea:focus, input:focus{
     margin-bottom: 0.5rem;
     margin: 1rem;
 }
+
+.options textarea {
+    display: flex;
+    flex-grow: 1;
+    background-color: var(--text-area-color);
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    resize: none;
+    border: none;
+}
+
 @media screen and (max-width: 700px) {
 
     .persona {
