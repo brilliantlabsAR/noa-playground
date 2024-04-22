@@ -164,6 +164,20 @@ photoInput.onchange = function (event) {
     }
 }
 
+async function callAPI(formData) {
+    let configRaw = await fetch('./noa_config.json')
+    let configJson = await configRaw.json()
+
+    let response = await fetch(configJson.noa.apiUrl, {
+        method: "POST",
+        headers: {
+            "Authorization": localStorage.getItem("brilliantApiToken")
+        },
+        body: formData
+    })
+
+    return await response.json()
+}
 submitButton.onclick = async function () {
 
     if (textInput.value == "") {
@@ -209,20 +223,10 @@ submitButton.onclick = async function () {
     console.log(getHistory())
 
     try {
-        // Get the Brilliant API url
-        let configRaw = await fetch('./noa_config.json')
-        let configJson = await configRaw.json()
-
-        // Send the query to the chat API
-        let response = await fetch(configJson.noa.apiUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": localStorage.getItem("brilliantApiToken")
-            },
-            body: formData
-        })
-
-        var json = await response.json()
+        let json = await callAPI(formData)
+        if (json.error) {
+            throw json.error
+        }
 
     } catch (error) {
         checkKeys(true)
@@ -237,6 +241,36 @@ submitButton.onclick = async function () {
     responseBox.scrollTop = responseBox.scrollHeight
     appendHistory("assistant", json.response)
 }
+var random_time = 1000
+const SYSTEM_MESSAGE_LIST = [
+    "Based on current date check something important in history for the date then inform user in engaging way and also ask user about his/her opinion",
+    "look for an upcoming event in the user's area and inform the user about it  in engaging way and also ask if they are interested in attending",
+    "look for a popular movie in the user's area and inform the user about it  in engaging way and also ask if they are interested in watching it",
+]
+function startRandomPings() {
+    setTimeout(async function () {
+        let formData = new FormData()
+        let _systemMessage = {
+            "role": "system",
+            "content": SYSTEM_MESSAGE_LIST[Math.floor(Math.random() * SYSTEM_MESSAGE_LIST.length)]
+        }
+        formData.append("prompt", "")
+        formData.append("messages", JSON.stringify([_systemMessage]))
+        formData.append("experiment", "1")
+        formData.append("config", JSON.stringify({}))
+        formData.append("local_time", localTime())
+        formData.append("address", addressText.value)
+        let json = await callAPI(formData)
+        if (json.error) {
+            throw json.error
+        }
+        responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
+        appendHistory("assistant", json.response)
+        random_time = Math.floor(Math.random() * 10000) + 60000
+        startRandomPings()
+    }, random_time)
+}
+startRandomPings()
 function drawOutputImage(image) {
     const canvas = document.getElementById("image_output")
     const ctx = canvas.getContext("2d")
