@@ -223,7 +223,7 @@ submitButton.onclick = async function () {
     console.log(getHistory())
 
     try {
-        let json = await callAPI(formData)
+        var json = await callAPI(formData)
         if (json.error) {
             throw json.error
         }
