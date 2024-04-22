@@ -241,7 +241,7 @@ submitButton.onclick = async function () {
     responseBox.scrollTop = responseBox.scrollHeight
     appendHistory("assistant", json.response)
 }
-var random_time = 1000
+var random_time = 0
 const SYSTEM_MESSAGE_LIST = [
     "Based on current date check something important in history for the date then inform user in engaging way and also ask user about his/her opinion",
     "look for an upcoming event in the user's area and inform the user about it  in engaging way and also ask if they are interested in attending",
@@ -266,7 +266,7 @@ function startRandomPings() {
         }
         responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
         appendHistory("assistant", json.response)
-        random_time = Math.floor(Math.random() * 10000) + 60000
+        random_time = Math.floor(Math.random() * 10000) + 300000
         startRandomPings()
     }, random_time)
 }
