@@ -270,7 +270,7 @@ function startRandomPings() {
         startRandomPings()
     }, random_time)
 }
-startRandomPings()
+// startRandomPings()
 function drawOutputImage(image) {
     const canvas = document.getElementById("image_output")
     const ctx = canvas.getContext("2d")
