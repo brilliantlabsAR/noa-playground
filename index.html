@@ -88,7 +88,7 @@
                         <option value="claude-3-sonnet-20240229">Claude-3 Opus</option>
                     </select>
                 <!-- <label for="serpapi_image_mode">SerpApi Image Mode</label> -->
-                <select name="serpapi_image_mode" id="serpapi_image_mode">
+                <select name="serpapi_image_mode" id="serpapi_image_mode" >
                     <option value="google_lens">Google Lens (ignores query)</option>
                     <option value="google_reverse_image" selected>Google Reverse Image Search (w/ query)</option>
                 </select>
@@ -96,6 +96,9 @@
                 <div class="config">
                     <label for="useCustomSystemMessage">Use custom system message
                     <input type="checkbox" id="useCustomSystemMessage" name="useCustomSystemMessage">
+                    <label for="wild_card">Noa Move's first</label>
+                    <input type="checkbox" name="Wild_card" id="wild_card">
+
                 </div>
                 <div class="config">
                     <textarea id="systemMessage" name="systemMessage" class="collapsed">

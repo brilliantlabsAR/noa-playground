@@ -26,6 +26,7 @@ const visionModel = document.getElementById('visionModel')
 const generateImage = document.getElementById('generateImage')
 const systemMessageText = document.getElementById('systemMessage')
 const useCustomSystemMessage = document.getElementById("useCustomSystemMessage")
+const wildCard = document.getElementById("wild_card")
 // Keep persona section hidden (they are enabled at during setup)
 personaQuestions.style.display = 'none'
 personaResult.style.display = 'none'
@@ -39,6 +40,10 @@ window.onload = async function () {
     // Check if the keys have been entered
     await checkKeys(false)
     promptReadyUiCallback()
+    if (localStorage.getItem("wildCard") == "1") {
+        wildCard.checked = true
+        startRandomPings()
+    }
 }
 
 async function checkKeys(force) {
@@ -243,23 +248,26 @@ submitButton.onclick = async function () {
 }
 var random_time = 0
 const SYSTEM_MESSAGE_LIST = [
-    "Based on current date check something important in history for the date then inform user in engaging way and also ask user about his/her opinion",
-    "look for an upcoming event in the user's area and inform the user about it  in engaging way and also ask if they are interested in attending",
-    "look for a popular movie in the user's area and inform the user about it  in engaging way and also ask if they are interested in watching it",
+    "Based on current date check something important in history for the date then inform user in engaging way and also ask user about his/her opinion, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
+    "look for an upcoming event in the user's area and inform the user about it  in engaging way and also ask if they are interested in attending, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
+    "look for a popular movie in the user's area and inform the user about it  in engaging way and also ask if they are interested in watching it, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
 ]
+var currentPing=null
 function startRandomPings() {
-    setTimeout(async function () {
+    currentPing = setTimeout(async function () {
         let formData = new FormData()
         let _systemMessage = {
             "role": "system",
             "content": SYSTEM_MESSAGE_LIST[Math.floor(Math.random() * SYSTEM_MESSAGE_LIST.length)]
         }
-        formData.append("prompt", "")
+        formData.append("prompt", "hi")
         formData.append("messages", JSON.stringify([_systemMessage]))
         formData.append("experiment", "1")
         formData.append("config", JSON.stringify({}))
         formData.append("local_time", localTime())
         formData.append("address", addressText.value)
+        appendHistory("user", "hi")
+
         let json = await callAPI(formData)
         if (json.error) {
             throw json.error
@@ -267,10 +275,11 @@ function startRandomPings() {
         responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
         appendHistory("assistant", json.response)
         random_time = Math.floor(Math.random() * 10000) + 300000
-        startRandomPings()
+        if(localStorage.getItem("wildCard") == "1"){
+            startRandomPings()
+        }
     }, random_time)
 }
-// startRandomPings()
 function drawOutputImage(image) {
     const canvas = document.getElementById("image_output")
     const ctx = canvas.getContext("2d")
@@ -279,6 +288,18 @@ function drawOutputImage(image) {
         ctx.drawImage(img, 0, 0, 512, 512)
     }
     img.src = image
+}
+wildCard.onclick = function () {
+    if (wildCard.checked) {
+    localStorage.setItem("wildCard", "1")
+    try{
+        clearTimeout(currentPing)
+    }catch(e){}
+        random_time =0
+        startRandomPings()
+    }else{
+        localStorage.removeItem("wildCard")
+    }
 }
 textInput.onkeydown = function (event) {
     if (event.key == "Enter") {
