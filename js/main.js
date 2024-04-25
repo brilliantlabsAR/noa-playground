@@ -22,6 +22,7 @@ const webSearchOptions = document.getElementById('web_search');
 const serpApiImageModeOptions = document.getElementById('serpapi_image_mode');
 const addressText = document.getElementById("address");
 const clearButton = document.getElementById('clearButton')
+const assistantSelection = document.getElementById("assistantSelection");
 const visionModel = document.getElementById('visionModel')
 const generateImage = document.getElementById('generateImage')
 const systemMessageText = document.getElementById('systemMessage')
@@ -188,11 +189,15 @@ submitButton.onclick = async function () {
     if (textInput.value == "") {
         return
     }
+    let assistant = assistantSelection.value
     let vision_model = visionModel.value
     let generate_image = generateImage.checked
     const assistantConfig = {
         "search_api": webSearchOptions.value,
         "engine": serpApiImageModeOptions.value,    // ignored for every other search_api
+    }
+    if (assistant) {
+        assistantConfig["assistant"] = assistant
     }
     if (vision_model) {
         assistantConfig["vision"] = vision_model
