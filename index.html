@@ -68,9 +68,9 @@
 
             <div class="options">
                 <div class="config">
-                    <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115" placeholder="Address">
-                <label for="generate_image">Generate Image
-                    <input type="checkbox" name="generate_image" id="generateImage">
+                    <input class="textInput" id="address" type="text" value="2842 California St., San Francisco, CA 94115" placeholder="Address" style="width: 100%;">
+                <label for="generate_image" style="display: none;">Generate Image
+                    <input type="checkbox" name="generate_image" id="generateImage" >
                 </label>
                     
                 </div>
@@ -82,7 +82,8 @@
                         <option value="perplexity">Perplexity</option>
                     </select>
                     <select name="Vision" id="visionModel">
-                        <option value="gpt-4-vision-preview">GPT4Vision</option>
+                        <!-- <option value="gpt-4-vision-preview">GPT4Vision</option> -->
+                        <option value="gpt-4o">GPT4OVision</option>
                         <option value="claude-3-haiku-20240307">Claude-3 Haiku</option>
                         <option value="claude-3-sonnet-20240229">Claude-3 Sonnet</option>
                         <option value="claude-3-sonnet-20240229">Claude-3 Opus</option>
@@ -96,8 +97,8 @@
                 <div class="config">
                     <label for="useCustomSystemMessage">Use custom system message
                     <input type="checkbox" id="useCustomSystemMessage" name="useCustomSystemMessage">
-                    <label for="wild_card">Noa Move's first</label>
-                    <input type="checkbox" name="Wild_card" id="wild_card">
+                    <label for="wild_card" style="display: none;">Noa Move's first</label>
+                    <input type="checkbox" name="Wild_card" id="wild_card" style="display: none;">
 
                 </div>
                 <div class="config">

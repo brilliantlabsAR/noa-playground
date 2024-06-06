@@ -224,7 +224,7 @@ textarea:focus, input:focus{
     background-color: var(--text-area-color);
     border-radius: 10px;
     padding: 0.8rem;
-    width: 100%;
+    /* width: 100%; */
     color: var(--text-color);
 }
 .config label {

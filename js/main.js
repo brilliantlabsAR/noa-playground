@@ -214,10 +214,9 @@ submitButton.onclick = async function () {
     }else{
         resetImages("image_input")
     }
-    formData.append("experiment", "1")
-    formData.append("config", JSON.stringify(assistantConfig))
-    formData.append("local_time", localTime())
-    formData.append("address", addressText.value)
+    formData.append("experimental", JSON.stringify(assistantConfig))
+    formData.append("time", localTime())
+    formData.append("location", addressText.value)
     
     responseBox.value += "You: " + textInput.value + "\n\n"
     responseBox.scrollTop = responseBox.scrollHeight
@@ -236,7 +235,7 @@ submitButton.onclick = async function () {
     } catch (error) {
         checkKeys(true)
     }
-    responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
+    responseBox.value += `Noa: ${json.message} [Tokens: ${JSON.stringify(json.debug.token_usage_by_model)} Debug: ${json.debug_tools!=undefined?json.debug_tools:""} ]\n\n`
     let imageOutput = json.image
      // image is base64 encoded
     if (imageOutput) {
@@ -244,13 +243,27 @@ submitButton.onclick = async function () {
         drawOutputImage(imageOutput)
     }
     responseBox.scrollTop = responseBox.scrollHeight
-    appendHistory("assistant", json.response)
+    appendHistory("assistant", json.message)
 }
 var random_time = 0
+/*
+Nearby events: find interesting local events happening in my current city
+Local neighborhood history (only when entered a new neighborhood): tell me about the history of a neighborhood once I enter it
+News: tell me about the daily news and highlight different perspectives across various publications
+Today in history: tell me about a historical even or notable occurrence which happened on this same day in history
+Mindfulness tips: give me tips to live a more mindful day full of presence, gratitude, and forgiveness and tell me about the benefits of doing so
+Breathing reminder: remind me to engage in deep breathing and tell me about the health benefits of doing so
+Good posture reminder: remind me to practice good posture and give me tips for how to do so
+Dose of spirituality: share one quotation from holy writings and philosophical works for my reflection
+*/
 const SYSTEM_MESSAGE_LIST = [
-    "Based on current date check something important in history for the date then inform user in engaging way and also ask user about his/her opinion, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
-    "look for an upcoming event in the user's area and inform the user about it  in engaging way and also ask if they are interested in attending, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
-    "look for a popular movie in the user's area and inform the user about it  in engaging way and also ask if they are interested in watching it, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
+    "Tell user about a historical event or notable occurrence which happened on this same day in history  in engaging way and also ask user about his/her opinion, keep messages short(max 3-4 sentences) and don't mention terms like the 'serch result ...' or 'I found ...'",
+    "Give user tips to live a more mindful day full of presence, gratitude, and forgiveness and tell user about the benefits of doing so",
+    "Remind user to engage in deep breathing and tell user about the health benefits of doing so",
+    "Remind user to practice good posture and give user tips for how to do so",
+    "Share one quotation from holy writings and philosophical works for user's reflection",
+    "Find interesting local events happening in user's current city",
+    "Tell user about daily news and highlight different perspectives across various publications",
 ]
 var currentPing=null
 function startRandomPings() {
@@ -260,12 +273,12 @@ function startRandomPings() {
             "role": "system",
             "content": SYSTEM_MESSAGE_LIST[Math.floor(Math.random() * SYSTEM_MESSAGE_LIST.length)]
         }
-        formData.append("prompt", "hi")
+        formData.append("prompt", "")
         formData.append("messages", JSON.stringify([_systemMessage]))
         formData.append("experiment", "1")
-        formData.append("config", JSON.stringify({}))
-        formData.append("local_time", localTime())
-        formData.append("address", addressText.value)
+        formData.append("experimental", JSON.stringify({}))
+        formData.append("time", localTime())
+        formData.append("location", addressText.value)
         appendHistory("user", "hi")
 
         let json = await callAPI(formData)
@@ -274,7 +287,7 @@ function startRandomPings() {
         }
         responseBox.value += `Noa: ${json.response} [${json.debug_tools} ${json.total_tokens} tokens used]\n\n`
         appendHistory("assistant", json.response)
-        random_time = Math.floor(Math.random() * 10000) + 300000
+        random_time = Math.floor(Math.random() * (10*60*1000)) + (1*60*60*1000)
         if(localStorage.getItem("wildCard") == "1"){
             startRandomPings()
         }
