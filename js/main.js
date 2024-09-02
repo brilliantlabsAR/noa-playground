@@ -222,6 +222,7 @@ submitButton.onclick = async function () {
     responseBox.scrollTop = responseBox.scrollHeight
 
     appendHistory("user", textInput.value)
+    let userMessage = textInput.value
     textInput.value = ""
 
     console.log(getHistory())
@@ -235,12 +236,16 @@ submitButton.onclick = async function () {
     } catch (error) {
         checkKeys(true)
     }
-    responseBox.value += `Noa: ${json.message} [Tokens: ${JSON.stringify(json.debug.token_usage_by_model)} Debug: ${json.debug_tools!=undefined?json.debug_tools:""} ]\n\n`
+    responseBox.value += `Noa: ${json.message} [Tokens: ${JSON.stringify(json.debug.token_usage_by_model)} Topic: ${json.debug.topic_changed?'Changed':'Not changed'} Debug: ${json.debug.timings!=undefined?json.debug.timings:""} ]\n\n`
     let imageOutput = json.image
      // image is base64 encoded
     if (imageOutput) {
         imageOutput = "data:image/png;base64," + imageOutput
         drawOutputImage(imageOutput)
+    }
+    if (json.debug.topic_changed){
+        resetHistory()
+        appendHistory("user", userMessage)
     }
     responseBox.scrollTop = responseBox.scrollHeight
     appendHistory("assistant", json.message)
