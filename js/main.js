@@ -236,7 +236,7 @@ submitButton.onclick = async function () {
     } catch (error) {
         checkKeys(true)
     }
-    responseBox.value += `Noa: ${json.message} [Tokens: ${JSON.stringify(json.debug.token_usage_by_model)} Topic: ${json.debug.topic_changed?'Changed':'Not changed'} Debug: ${json.debug.timings!=undefined?json.debug.timings:""} ]\n\n`
+    responseBox.value += `Noa: ${json.message} [Tokens: ${JSON.stringify(json.debug.token_usage_by_model)} Topic: ${json.debug.topic_changed?'Changed':'Not changed'} Debug: ${json.debug.timings!=undefined?JSON.stringify(json.debug.timings):""} ]\n\n`
     let imageOutput = json.image
      // image is base64 encoded
     if (imageOutput) {
